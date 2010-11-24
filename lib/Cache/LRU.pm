@@ -3,7 +3,11 @@ package Cache::LRU;
 use strict;
 use warnings;
 
+use 5.008_001;
+
 use Scalar::Util qw();
+
+our $VERSION = '0.01';
 
 sub GC_FACTOR () { 10 }
 
