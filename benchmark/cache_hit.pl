@@ -11,7 +11,7 @@ use Tie::Cache::LRU;
 my $size = 1024;
 my $loop = 1000;
 
-sub cache_iface {
+sub cache_hit {
     my $cache = shift;
     $cache->set(a => 1);
     my $c = 0;
@@ -20,16 +20,17 @@ sub cache_iface {
     $c;
 }
 
+print "cache_hit:\n";
 cmpthese(-1, {
     'Cache::LRU' => sub {
-        cache_iface(
+        cache_hit(
             Cache::LRU->new(
                 size => $size,
             ),
         );
     },
     'Cache::Ref::LRU (Array)' => sub {
-        cache_iface(
+        cache_hit(
             Cache::Ref::LRU->new(
                 size      => $size,
                 lru_class => qw(Cache::Ref::Util::LRU::Array),
@@ -37,7 +38,7 @@ cmpthese(-1, {
         );
     },
     'Cache::Ref::LRU (List)'  => sub {
-        cache_iface(
+        cache_hit(
             Cache::Ref::LRU->new(
                 size      => $size,
                 lru_class => qw(Cache::Ref::Util::LRU::List),
@@ -51,5 +52,48 @@ cmpthese(-1, {
         $c += $cache{a}
             for 1..$loop;
         $c;
+    },
+});
+
+print "\ncache_set:\n";
+srand(0);
+my @keys = map { int rand(1048576) } 1..65536;
+
+sub cache_set {
+    my $cache = shift;
+    $cache->set($_ => 1)
+        for @keys;
+    $cache;
+}
+
+cmpthese(-1, {
+    'Cache::LRU' => sub {
+        cache_set(
+            Cache::LRU->new(
+                size => $size,
+            ),
+        );
+    },
+    #'Cache::Ref::LRU (Array)' => sub {
+    #    cache_set(
+    #        Cache::Ref::LRU->new(
+    #            size      => $size,
+    #            lru_class => qw(Cache::Ref::Util::LRU::Array),
+    #        ),
+    #    );
+    #},
+    'Cache::Ref::LRU (List)' => sub {
+        cache_set(
+            Cache::Ref::LRU->new(
+                size      => $size,
+                lru_class => qw(Cache::Ref::Util::LRU::List),
+            ),
+        );
+    },
+    'Tie::Cache::LRU' => sub {
+        tie my %cache, 'Tie::Cache::LRU', $size;
+        $cache{$_} = 1
+            for @keys;
+        \%cache;
     },
 });
