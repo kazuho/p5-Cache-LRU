@@ -1,4 +1,7 @@
 Revision history for Perl extension Cache::LRU
 
+0.02
+	- free the value object immediately when removed or when a new value is supplied
+
 0.01
 	- initial release
