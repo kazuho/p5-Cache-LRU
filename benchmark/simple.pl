@@ -2,6 +2,7 @@ use strict;
 use warnings;
 
 use Benchmark qw(:all);
+use Cache::FastMmap;
 use Cache::LRU;
 use Cache::Ref::LRU;
 use Cache::Ref::Util::LRU::Array;
@@ -22,6 +23,21 @@ sub cache_hit {
 
 print "cache_hit:\n";
 cmpthese(-1, {
+    'Cache::FastMmap' => sub {
+        cache_hit(
+            Cache::FastMmap->new(
+                cache_size => '1m',
+            ),
+        );
+    },
+    'Cache::FastMmap (raw)' => sub {
+        cache_hit(
+            Cache::FastMmap->new(
+                cache_size => '1m',
+                raw_values => 1,
+            ),
+        );
+    },
     'Cache::LRU' => sub {
         cache_hit(
             Cache::LRU->new(
@@ -67,6 +83,7 @@ sub cache_set {
 }
 
 cmpthese(-1, {
+    # no test for Cache::FastMmap since it does not have the "size" parameter
     'Cache::LRU' => sub {
         cache_set(
             Cache::LRU->new(
@@ -74,6 +91,7 @@ cmpthese(-1, {
             ),
         );
     },
+    # too slow
     #'Cache::Ref::LRU (Array)' => sub {
     #    cache_set(
     #        Cache::Ref::LRU->new(
