@@ -76,7 +76,7 @@ sub _update_fifo {
         my %need = map { $_ => 1 } keys %$entries;
         while (%need) {
             my $fifo_entry = pop @$fifo;
-            push @new_fifo, $fifo_entry
+            unshift @new_fifo, $fifo_entry
                 if delete $need{$fifo_entry->[0]};
         }
         $self->{_fifo} = \@new_fifo;
