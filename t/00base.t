@@ -50,4 +50,8 @@ is $cache->get('c'), 3;
 ok ! defined $cache->get('d');
 is $cache->get('e'), 6;
 
+$cache->clear;
+ok ! defined $cache->get('c');
+ok ! defined $cache->get('e');
+
 done_testing;

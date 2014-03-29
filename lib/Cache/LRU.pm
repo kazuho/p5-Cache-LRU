@@ -64,6 +64,13 @@ sub get {
     $$value_ref;
 }
 
+sub clear {
+    my $self = shift;
+
+    $self->{_entries} = {};
+    $self->{_fifo} = [];    
+}
+
 sub _update_fifo {
     # precondition: $self->{_entries} should contain given key
     my ($self, $key, $value_ref) = @_;
@@ -125,6 +132,10 @@ Stores the given key-value pair.
 =head2 $cache->remove($key)
 
 Removes data associated to the given key and returns the old value, if any.
+
+=head2 $cache->clear($key)
+
+Removes all entries from the cache.
 
 =head1 AUTHOR
 
