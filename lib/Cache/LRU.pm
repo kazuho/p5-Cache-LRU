@@ -7,7 +7,7 @@ use 5.008_001;
 
 use Scalar::Util qw();
 
-our $VERSION = '0.03';
+our $VERSION = '0.04';
 
 sub GC_FACTOR () { 10 }
 

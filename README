@@ -34,6 +34,9 @@ FUNCTIONS
     Removes data associated to the given key and returns the old value, if
     any.
 
+  $cache->clear($key)
+    Removes all entries from the cache.
+
 AUTHOR
     Kazuho Oku
 
