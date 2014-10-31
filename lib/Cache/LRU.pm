@@ -133,7 +133,7 @@ Stores the given key-value pair.
 
 Removes data associated to the given key and returns the old value, if any.
 
-=head2 $cache->clear($key)
+=head2 $cache->clear
 
 Removes all entries from the cache.
 
